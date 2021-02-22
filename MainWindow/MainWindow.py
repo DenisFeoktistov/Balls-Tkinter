@@ -5,6 +5,7 @@ from .MainWindowClasses.Settings import Settings
 class MainWindow:
     WINDOW_WIDTH = 1000
     WINDOW_HEIGHT = 800
+    COLOR = '#B4B4B4'
 
     def __init__(self, app):
         self.app = app
@@ -14,10 +15,10 @@ class MainWindow:
         self.adding_title()
 
         self.settings = Settings(self)
-        self.field = Field(self)
+        self.field = Field(self, relx=0.1, rely=0.1, relwidth=0.3, relheight=0.8)
 
     def adding_background(self):
-        self.app.master["bg"] = "#505050"
+        self.app.master["bg"] = MainWindow.COLOR
 
     def adding_title(self):
         self.app.master.title("Balls")
