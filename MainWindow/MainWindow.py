@@ -3,9 +3,8 @@ from .MainWindowClasses.Settings import Settings
 
 
 class MainWindow:
-    def __init__(self):
-        self.settings = Settings()
-        self.field = Field()
+    def __init__(self, app):
+        self.app = app
 
-    def show(self):
-        pass
+        self.settings = Settings(self)
+        self.field = Field(self)

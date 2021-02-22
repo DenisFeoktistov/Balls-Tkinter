@@ -1,12 +1,16 @@
+import tkinter
+
+
 from MainWindow.MainWindow import MainWindow
 
 
 class App:
     def __init__(self):
-        self.main_window = MainWindow()
+        self.master = tkinter.Tk()
+        self.main_window = MainWindow(self)
 
     def show(self):
-        self.main_window.show()
+        self.master.mainloop()
 
 
 if __name__ == "__main__":
