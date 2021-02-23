@@ -20,7 +20,7 @@ class Point:
         if isinstance(other, float):
             return Point(self.x * other, self.y * other)
         elif isinstance(other, Point):
-            return self.x * other.x + self.y + other.y
+            return self.x * other.x + self.y * other.y
 
     def __rmul__(self, other):
         return Point(self.x * other, self.y * other)
