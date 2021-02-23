@@ -46,7 +46,7 @@ class Ball:
 
 
 def ball_overlap(a, b):
-    return (a.pos - b.pos).absv() <= (a.radius + b.radius)
+    return abs(a.pos - b.pos) <= (a.radius + b.radius)
 
 
 def collide_balls(a, b):
