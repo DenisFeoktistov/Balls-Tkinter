@@ -30,3 +30,6 @@ class Point:
 
     def __abs__(self):
         return sqrt(self.x ** 2 + self.y ** 2)
+
+    def __str__(self):
+        return f"({self.x}, {self.y})"

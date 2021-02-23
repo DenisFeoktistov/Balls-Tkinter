@@ -1,5 +1,4 @@
-from Field import Field
-from Point import Point
+from .Point import Point
 
 
 class Ball:
@@ -19,8 +18,8 @@ class Ball:
 
     def move(self, time):
         self.pos += self.velocity * time
-        self.field.canvas.coords(self.oval, (self.pos.x - self.radius, self.pos.y - self.radius), (
-            self.pos.x + self.radius, self.pos.y + self.radius))
+        self.field.canvas.coords(self.oval, self.pos.x - self.radius, self.pos.y - self.radius,
+                                 self.pos.x + self.radius, self.pos.y + self.radius)
         self.check_collisions()
 
     def collide_wall_vertical(self):
@@ -30,13 +29,15 @@ class Ball:
         self.velocity.y *= -1
 
     def check_collisions(self):
-        if self.pos.x - self.radius < 0 or self.pos.x + self.radius > self.field.canvas.width:
+        if self.pos.x - self.radius < 0 or self.pos.x + self.radius > self.field.canvas.winfo_width():
             self.collide_wall_vertical()
-        if self.pos.y - self.radius < 0 or self.pos.y + self.radius > self.field.canvas.height:
+        if self.pos.y - self.radius < 0 or self.pos.y + self.radius > self.field.canvas.winfo_height():
             self.collide_wall_horizontal()
-        overlapping = self.field.canvas.find_overlapping((self.pos.x - self.radius, self.pos.y - self.radius), (
-            self.pos.x + self.radius, self.pos.y + self.radius))
+        overlapping = self.field.canvas.find_overlapping(self.pos.x - self.radius, self.pos.y - self.radius,
+                                                         self.pos.x + self.radius, self.pos.y + self.radius)
         for obj in overlapping:
+            if obj == self.oval:
+                continue
             other = self.field.ball_ids[obj]
             if ball_overlap(self, other):
                 if self.oval < other.oval:
@@ -50,6 +51,7 @@ def ball_overlap(a, b):
 
 
 def collide_balls(a, b):
+    #print(a.pos, b.pos)
     a.velocity -= (2 * b.mass / (a.mass + b.mass)) * ((a.velocity - b.velocity) * (a.pos - b.pos)) / abs(
         a.pos - b.pos) ** 2 * (a.pos - b.pos)
     b.velocity -= (2 * a.mass / (a.mass + b.mass)) * ((b.velocity - a.velocity) * (b.pos - a.pos)) / abs(

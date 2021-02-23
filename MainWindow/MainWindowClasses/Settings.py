@@ -101,4 +101,4 @@ class Settings:
     def regenerate(self):
         with open("settings.json", "w") as file:
             json.dump(self.state, file)
-        # TODO: generate balls
+        self.window.field.generate(self.state)
