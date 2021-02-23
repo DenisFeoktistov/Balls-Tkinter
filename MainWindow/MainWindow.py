@@ -14,7 +14,7 @@ class MainWindow:
         self.adding_background()
         self.adding_title()
 
-        self.settings = Settings(self)
+        self.settings = Settings(self, relx=0.6, rely=0.1, relwidth=0.3, relheight=0.8)
         self.field = Field(self, relx=0.1, rely=0.1, relwidth=0.3, relheight=0.8)
 
     def adding_background(self):
