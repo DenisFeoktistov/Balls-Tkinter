@@ -12,10 +12,13 @@ class ParamWidget:
 
         self.button_up = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR, text="▲",
                                         font="sans 30", fg="#000000", highlightbackground=self.settings.window.COLOR,
-                                        relief=tkinter.FLAT, overrelief=tkinter.FLAT, activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0)
+                                        relief=tkinter.FLAT, overrelief=tkinter.FLAT,
+                                        activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0)
         self.button_down = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
-                                          text="▼", font="sans 30", fg="#000000", highlightbackground=self.settings.window.COLOR,
-                                          relief=tkinter.FLAT, overrelief=tkinter.FLAT, activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0)
+                                          text="▼", font="sans 30", fg="#000000",
+                                          highlightbackground=self.settings.window.COLOR,
+                                          relief=tkinter.FLAT, overrelief=tkinter.FLAT,
+                                          activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0)
         self.button_up.place(relx=self.relx + self.relwidth * 0.8, rely=self.rely + self.relheight * 0.1,
                              relwidth=self.relwidth * 0.2,
                              relheight=0.35 * self.relheight)
@@ -49,19 +52,28 @@ class Settings:
         self.relheight = relheight
 
         self.init_title()
+        self.init_regenerate_button()
+        self.init_param_widgets()
 
+    def init_param_widgets(self):
         params = ["tessdwswsdt1", "test2", "test3", "test4", "test5"]
-
         self.widgets = list()
         for i, param in enumerate(params):
             self.widgets.append(ParamWidget(relx=self.relx,
-                                            rely=self.rely + self.relheight * 0.1 + self.relheight * 0.9 * i / len(
+                                            rely=self.rely + self.relheight * 0.1 + self.relheight * 0.85 * i / len(
                                                 params),
                                             relwidth=self.relwidth,
                                             relheight=self.relheight * 0.8 / len(params),
                                             param=param, settings=self))
 
+    def init_regenerate_button(self):
+        self.regenerate_label = tkinter.Button(master=self.window.app.master, text='Save & regenerate', justify=tkinter.CENTER,
+                                               bg=self.window.COLOR, fg='#000000', font='sans 20')
+        self.regenerate_label.place(relx=self.relx, rely=self.rely + self.relheight * 0.95,
+                                    relwidth=self.relwidth,
+                                    relheight=0.05 * self.relheight)
+
     def init_title(self):
-        self.title = tkinter.Label(self.window.app.master, text='Settings', justify=tkinter.CENTER,
+        self.title = tkinter.Label(master=self.window.app.master, text='Settings', justify=tkinter.CENTER,
                                    bg=self.window.COLOR, fg='#000000', font='sans 20')
         self.title.place(relx=self.relx, rely=self.rely, relwidth=self.relwidth, relheight=0.05 * self.relheight)
