@@ -11,25 +11,26 @@ class ParamWidget:
         self.param = param
 
         self.button_up = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR, text="▲",
-                                        font="sans 30", fg="#000000", bd=0)
+                                        font="sans 30", fg="#000000", highlightbackground=self.settings.window.COLOR,
+                                        relief=tkinter.FLAT, overrelief=tkinter.FLAT, activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0)
         self.button_down = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
-                                          text="▼", font="sans 30", fg="#000000", bd=0)
-
+                                          text="▼", font="sans 30", fg="#000000", highlightbackground=self.settings.window.COLOR,
+                                          relief=tkinter.FLAT, overrelief=tkinter.FLAT, activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0)
         self.button_up.place(relx=self.relx + self.relwidth * 0.8, rely=self.rely + self.relheight * 0.1,
                              relwidth=self.relwidth * 0.2,
-                             relheight=0.3 * self.relheight)
+                             relheight=0.35 * self.relheight)
         self.button_down.place(relx=self.relx + self.relwidth * 0.8, rely=self.rely + self.relheight * 0.6,
                                relwidth=self.relwidth * 0.2,
-                               relheight=0.3 * self.relheight)
+                               relheight=0.35 * self.relheight)
 
         self.param_label = tkinter.Label(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
-                                         text=self.param, font="sans 30")
+                                         text=self.param, font="sans 30", fg='#000000')
         self.param_label.place(relx=self.relx, rely=self.rely + self.relheight * 0.1,
                                relwidth=self.relwidth * 0.6,
                                relheight=0.8 * self.relheight)
 
         self.value_label = tkinter.Label(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
-                                         text=0, font="sans 40")
+                                         text=0, font="sans 40", fg='#000000')
         self.value_label.place(relx=self.relx + self.relwidth * 0.6, rely=self.rely + self.relheight * 0.1,
                                relwidth=self.relwidth * 0.2,
                                relheight=0.8 * self.relheight)
