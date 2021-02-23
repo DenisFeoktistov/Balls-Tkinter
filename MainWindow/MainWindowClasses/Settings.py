@@ -2,26 +2,37 @@ import tkinter
 
 
 class ParamWidget:
-    def __init__(self, settings, text, relx, rely, relwidth, relheight):
+    def __init__(self, settings, param, relx, rely, relwidth, relheight):
         self.settings = settings
         self.relx = relx
         self.rely = rely
         self.relwidth = relwidth
         self.relheight = relheight
-        self.text = text
+        self.param = param
 
         self.button_up = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR, text="▲",
-                                        font="sans 50")
+                                        font="sans 30", fg="#000000", bd=0)
         self.button_down = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
-                                          text="▼",
-                                          font="sans 50")
+                                          text="▼", font="sans 30", fg="#000000", bd=0)
 
-        self.button_up.place(relx=self.relx + self.relwidth * 0.5, rely=self.rely + self.relheight * 0.1,
-                             relwidth=self.relwidth * 0.5,
+        self.button_up.place(relx=self.relx + self.relwidth * 0.8, rely=self.rely + self.relheight * 0.1,
+                             relwidth=self.relwidth * 0.2,
                              relheight=0.3 * self.relheight)
-        self.button_down.place(relx=self.relx + self.relwidth * 0.5, rely=self.rely + self.relheight * 0.6,
-                               relwidth=self.relwidth * 0.5,
+        self.button_down.place(relx=self.relx + self.relwidth * 0.8, rely=self.rely + self.relheight * 0.6,
+                               relwidth=self.relwidth * 0.2,
                                relheight=0.3 * self.relheight)
+
+        self.param_label = tkinter.Label(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
+                                         text=self.param, font="sans 30")
+        self.param_label.place(relx=self.relx, rely=self.rely + self.relheight * 0.1,
+                               relwidth=self.relwidth * 0.6,
+                               relheight=0.8 * self.relheight)
+
+        self.value_label = tkinter.Label(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
+                                         text=0, font="sans 40")
+        self.value_label.place(relx=self.relx + self.relwidth * 0.6, rely=self.rely + self.relheight * 0.1,
+                               relwidth=self.relwidth * 0.2,
+                               relheight=0.8 * self.relheight)
 
 
 class Settings:
@@ -38,16 +49,16 @@ class Settings:
 
         self.init_title()
 
-        params = ["test1", "test2", "test3", "test4", "test5"]
+        params = ["tessdwswsdt1", "test2", "test3", "test4", "test5"]
 
         self.widgets = list()
         for i, param in enumerate(params):
-            self.widgets.append(ParamWidget(relx=self.relx + self.relwidth * 0.1,
+            self.widgets.append(ParamWidget(relx=self.relx,
                                             rely=self.rely + self.relheight * 0.1 + self.relheight * 0.9 * i / len(
                                                 params),
-                                            relwidth=self.relwidth * 0.8,
+                                            relwidth=self.relwidth,
                                             relheight=self.relheight * 0.8 / len(params),
-                                            text=param, settings=self))
+                                            param=param, settings=self))
 
     def init_title(self):
         self.title = tkinter.Label(self.window.app.master, text='Settings', justify=tkinter.CENTER,
