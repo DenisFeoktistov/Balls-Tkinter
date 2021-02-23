@@ -6,12 +6,15 @@ class Field:
         # window: MainWindow, relx: real, rely: real,
         # relwidth: real, relheight: real,
         # title: tkinter.Label, canvas: tkinter.Canvas
+        # ball_ids: dictionary
 
         self.window = window
         self.relx = relx
         self.rely = rely
         self.relwidth = relwidth
         self.relheight = relheight
+        self.ball_ids = {}
+        self.ball_collisions = set()
 
         self.init_title()
         self.init_canvas()
