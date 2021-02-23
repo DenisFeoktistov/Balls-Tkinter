@@ -50,7 +50,7 @@ def ball_overlap(a, b):
 
 
 def collide_balls(a, b):
-    a.velocity -= (2 * b.mass / (a.mass + b.mass)) * ((a.velocity - b.velocity) * (a.pos - b.pos)) / (
-            a.pos - b.pos).absv() ** 2 * (a.pos - b.pos)
-    b.velocity -= (2 * a.mass / (a.mass + b.mass)) * ((b.velocity - a.velocity) * (b.pos - a.pos)) / (
-            b.pos - a.pos).absv() ** 2 * (b.pos - a.pos)
+    a.velocity -= (2 * b.mass / (a.mass + b.mass)) * ((a.velocity - b.velocity) * (a.pos - b.pos)) / abs(
+        a.pos - b.pos) ** 2 * (a.pos - b.pos)
+    b.velocity -= (2 * a.mass / (a.mass + b.mass)) * ((b.velocity - a.velocity) * (b.pos - a.pos)) / abs(
+        b.pos - a.pos) ** 2 * (b.pos - a.pos)
