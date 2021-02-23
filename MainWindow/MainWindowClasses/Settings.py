@@ -11,7 +11,6 @@ class ParamWidget:
         self.text = text
 
         self.button_up = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR, text="▲",
-                                        background="red",
                                         font="sans 50")
         self.button_down = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
                                           text="▼",
