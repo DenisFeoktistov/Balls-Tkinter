@@ -36,22 +36,22 @@ class ParamWidget:
                                relheight=0.8 * self.relheight)
 
         self.value_label = tkinter.Label(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
-                                         text=str(self.settings.state[self.param]), font="sans 40", fg='#000000')
+                                         text=str(self.settings.state[self.param]['value']), font="sans 40", fg='#000000')
         self.value_label.place(relx=self.relx + self.relwidth * 0.6, rely=self.rely + self.relheight * 0.1,
                                relwidth=self.relwidth * 0.2,
                                relheight=0.8 * self.relheight)
 
     def update_value(self):
-        self.value_label['text'] = str(self.settings.state[self.param])
+        self.value_label['text'] = str(self.settings.state[self.param]['value'])
 
     def increase(self):
-        if self.settings.state[self.param] < 100:
-            self.settings.state[self.param] += 1
+        if self.settings.state[self.param]['value'] < 100:
+            self.settings.state[self.param]['value'] += 1
             self.update_value()
 
     def decrease(self):
-        if self.settings.state[self.param] > 0:
-            self.settings.state[self.param] -= 1
+        if self.settings.state[self.param]['value'] > 0:
+            self.settings.state[self.param]['value'] -= 1
             self.update_value()
 
 

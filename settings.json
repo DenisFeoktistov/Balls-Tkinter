@@ -1,1 +1,17 @@
-{"size": 26, "velocity": 54, "count": 52}
+{
+  "size": {
+    "value": 50,
+    "min": 10,
+    "max": 50
+  },
+  "velocity": {
+    "value": 50,
+    "min": 10,
+    "max": 150
+  },
+  "count": {
+    "value": 50,
+    "min": 5,
+    "max": 15
+  }
+}
