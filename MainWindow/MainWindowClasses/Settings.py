@@ -37,13 +37,13 @@ class ParamWidget:
 
         self.button_up.place(relx=self.relx + self.relwidth * 0.8, rely=self.rely + self.relheight * 0.1,
                              relwidth=self.relwidth * 0.2,
-                             relheight=0.35 * self.relheight)
+                             relheight=0.4 * self.relheight)
         self.button_down.place(relx=self.relx + self.relwidth * 0.8, rely=self.rely + self.relheight * 0.6,
                                relwidth=self.relwidth * 0.2,
-                               relheight=0.35 * self.relheight)
+                               relheight=0.4 * self.relheight)
 
         self.param_label = tkinter.Label(master=self.settings.window.app.master, bg=self.settings.window.BG_COLOR,
-                                         text=self.param, font="sans 25", fg=self.settings.window.FG_COLOR,
+                                         text=self.param, font="sans 24", fg=self.settings.window.FG_COLOR,
                                          justify=tkinter.LEFT, anchor='w')
         self.param_label.place(relx=self.relx, rely=self.rely + self.relheight * 0.1,
                                relwidth=self.relwidth * 0.6,
