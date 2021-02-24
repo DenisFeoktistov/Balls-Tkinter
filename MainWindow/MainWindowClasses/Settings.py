@@ -15,14 +15,19 @@ class ParamWidget:
         self.button_up = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR, text="▲",
                                         font="sans 30", fg="#000000", highlightbackground=self.settings.window.COLOR,
                                         relief=tkinter.FLAT, overrelief=tkinter.FLAT,
-                                        activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0,
-                                        command=self.increase)
+                                        activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0)
         self.button_down = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR,
                                           text="▼", font="sans 30", fg="#000000",
                                           highlightbackground=self.settings.window.COLOR,
                                           relief=tkinter.FLAT, overrelief=tkinter.FLAT,
-                                          activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0,
-                                          command=self.decrease)
+                                          activebackground=self.settings.window.COLOR, activeforeground='#000000', bd=0)
+
+        self.button_up.bind('<ButtonPress-1>', lambda event: self.increase_event_handler())
+        self.button_up.bind('<ButtonRelease-1>', lambda event: self.button_up.after_cancel(self.jobid))
+
+        self.button_down.bind('<ButtonPress-1>', lambda event: self.decrease_event_handler())
+        self.button_down.bind('<ButtonRelease-1>', lambda event: self.button_up.after_cancel(self.jobid))
+
         self.button_up.place(relx=self.relx + self.relwidth * 0.8, rely=self.rely + self.relheight * 0.1,
                              relwidth=self.relwidth * 0.2,
                              relheight=0.35 * self.relheight)
@@ -45,16 +50,30 @@ class ParamWidget:
     def update_value(self):
         self.value_label['text'] = str(self.settings.state[self.param]['value'])
 
+    def increase_event_handler(self):
+        if self.settings.state[self.param]['value'] < 100:
+            self.settings.state[self.param]['value'] += 1
+            self.update_value()
+        self.jobid = self.button_up.after(500, self.increase)
+
+    def decrease_event_handler(self):
+        if self.settings.state[self.param]['value'] > 0:
+            self.settings.state[self.param]['value'] -= 1
+            self.update_value()
+        self.jobid = self.button_up.after(500, self.decrease)
+
     def increase(self):
         if self.settings.state[self.param]['value'] < 100:
             self.settings.state[self.param]['value'] += 1
             self.update_value()
-            self.jobid = self.button_up.after(20, self.increase)
+        self.jobid = self.button_up.after(30, self.increase)
 
     def decrease(self):
         if self.settings.state[self.param]['value'] > 0:
             self.settings.state[self.param]['value'] -= 1
             self.update_value()
+        self.jobid = self.button_up.after(30, self.decrease)
+
 
 
 class Settings:
