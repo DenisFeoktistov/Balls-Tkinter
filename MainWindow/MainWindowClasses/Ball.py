@@ -71,16 +71,14 @@ class Ball:
         self.velocity.y *= -1
 
     def check_collisions(self):
-        if self.pos.x - self.radius - self.field.BORDER_THICKNESS < -self.EPS or \
-                self.pos.x + self.radius - self.field.canvas.winfo_width() + self.field.BORDER_THICKNESS > self.EPS:
+        if self.pos.x - self.radius - self.field.BORDER_THICKNESS < -self.EPS or self.pos.x + self.radius - self.field.canvas.winfo_width() + self.field.BORDER_THICKNESS > self.EPS:
             num = self.pos.x - self.radius - self.field.BORDER_THICKNESS < -self.EPS
             if self.ignore_vertical:
                 self.ignore_vertical = False
             else:
                 self.collide_wall_vertical(num)
                 self.ignore_vertical = True
-        if self.pos.y - self.radius - self.field.BORDER_THICKNESS < -self.EPS or \
-                self.pos.y + self.radius - self.field.canvas.winfo_height() + self.field.BORDER_THICKNESS > self.EPS:
+        if self.pos.y - self.radius - self.field.BORDER_THICKNESS < -self.EPS or self.pos.y + self.radius - self.field.canvas.winfo_height() + self.field.BORDER_THICKNESS > self.EPS:
             num = self.pos.y - self.radius - self.field.BORDER_THICKNESS < -self.EPS
             if self.ignore_horizontal:
                 self.ignore_horizontal = False

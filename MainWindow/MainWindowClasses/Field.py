@@ -62,6 +62,7 @@ class Field:
             density[color] = state[f'{color} density']['min'] + (
                 state[f'{color} density']['max'] - state[f'{color} density']['min']) *\
                              state[f'{color} density']['value']
+        self.balls.clear()
         for _ in range(count):
             color = choice(["green", "red", "blue"])
 
