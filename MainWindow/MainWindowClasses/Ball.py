@@ -1,5 +1,20 @@
 from .Point import Point
 from sys import float_info
+import tkinter
+
+
+class VelocityVector:
+    K = 1.0
+
+    def __init__(self, ball):
+        self.ball = ball
+        self.end = self.ball.pos + self.ball.velocity * VelocityVector.K
+        self.arrow = self.ball.field.canvas.create_line(self.ball.pos.x, self.ball.pos.y, self.end.x, self.end.y,
+                                                        arrow=tkinter.LAST)
+
+    def update(self):
+        self.end = self.ball.pos + self.ball.velocity * VelocityVector.K
+        self.ball.field.canvas.coords(self.arrow, self.ball.pos.x, self.ball.pos.y, self.end.x, self.end.y)
 
 
 class Ball:
@@ -22,15 +37,19 @@ class Ball:
         self.ignore_horizontal = False
         self.ignore_vertical = False
 
+        self.vector = VelocityVector(self)
+
     def move(self, time):
         self.pos += self.velocity * time
         self.field.canvas.coords(self.oval, self.pos.x - self.radius, self.pos.y - self.radius,
                                  self.pos.x + self.radius, self.pos.y + self.radius)
         self.check_collisions()
+        self.vector.update()
 
     def collide_wall_vertical(self, num):
         if num:
-            self.field.canvas.coords(self.oval, 7, self.pos.y - self.radius, 7 + 2 * self.radius, self.pos.y + self.radius)
+            self.field.canvas.coords(self.oval, 7, self.pos.y - self.radius, 7 + 2 * self.radius,
+                                     self.pos.y + self.radius)
         else:
             self.field.canvas.coords(self.oval, self.field.canvas.winfo_width() - 7, self.pos.y - self.radius,
                                      self.field.canvas.winfo_width() - 7 - 2 * self.radius, self.pos.y + self.radius)
@@ -38,7 +57,8 @@ class Ball:
 
     def collide_wall_horizontal(self, num):
         if num:
-            self.field.canvas.coords(self.oval, self.pos.x - self.radius, 7, self.pos.x + self.radius, 7 + 2 * self.radius)
+            self.field.canvas.coords(self.oval, self.pos.x - self.radius, 7, self.pos.x + self.radius,
+                                     7 + 2 * self.radius)
         else:
             self.field.canvas.coords(self.oval, self.pos.x - self.radius, self.field.canvas.winfo_height() - 7,
                                      self.pos.x + self.radius, self.field.canvas.winfo_height() - 7 - 2 * self.radius)
@@ -63,7 +83,7 @@ class Ball:
         overlapping = self.field.canvas.find_overlapping(self.pos.x - self.radius, self.pos.y - self.radius,
                                                          self.pos.x + self.radius, self.pos.y + self.radius)
         for obj in overlapping:
-            if obj == self.oval:
+            if obj == self.oval or obj not in self.field.ball_ids:
                 continue
             other = self.field.ball_ids[obj]
             if ball_overlap(self, other):
@@ -79,8 +99,8 @@ def ball_overlap(a, b):
 
 def collide_balls(a, b):
     a.velocity, b.velocity = (a.velocity - (2 * b.mass / (a.mass + b.mass)) * (
-                (a.velocity - b.velocity) * (a.pos - b.pos)) / abs(
+            (a.velocity - b.velocity) * (a.pos - b.pos)) / abs(
         a.pos - b.pos) ** 2 * (a.pos - b.pos)), \
                              (b.velocity - (2 * a.mass / (a.mass + b.mass)) * (
-                                         (b.velocity - a.velocity) * (b.pos - a.pos)) / abs(
+                                     (b.velocity - a.velocity) * (b.pos - a.pos)) / abs(
                                  b.pos - a.pos) ** 2 * (b.pos - a.pos))
