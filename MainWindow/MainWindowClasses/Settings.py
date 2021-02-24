@@ -43,7 +43,7 @@ class ParamWidget:
                                relheight=0.35 * self.relheight)
 
         self.param_label = tkinter.Label(master=self.settings.window.app.master, bg=self.settings.window.BG_COLOR,
-                                         text=self.param, font="sans 30", fg=self.settings.window.FG_COLOR,
+                                         text=self.param, font="sans 25", fg=self.settings.window.FG_COLOR,
                                          justify=tkinter.LEFT, anchor='w')
         self.param_label.place(relx=self.relx, rely=self.rely + self.relheight * 0.1,
                                relwidth=self.relwidth * 0.6,

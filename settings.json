@@ -14,7 +14,22 @@
     "min": 5,
     "max": 15
   },
-  "vector\nscale": {
+  "vector scale": {
+    "value": 3,
+    "min": 0.1,
+    "max": 2
+  },
+  "red density": {
+    "value": 3,
+    "min": 0.1,
+    "max": 2
+  },
+  "green density": {
+    "value": 3,
+    "min": 0.1,
+    "max": 2
+  },
+  "blue density": {
     "value": 3,
     "min": 0.1,
     "max": 2
