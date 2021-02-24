@@ -10,6 +10,7 @@ class ParamWidget:
         self.relwidth = relwidth
         self.relheight = relheight
         self.param = param
+        self.jobid = None
 
         self.button_up = tkinter.Button(master=self.settings.window.app.master, bg=self.settings.window.COLOR, text="▲",
                                         font="sans 30", fg="#000000", highlightbackground=self.settings.window.COLOR,
@@ -48,6 +49,7 @@ class ParamWidget:
         if self.settings.state[self.param]['value'] < 100:
             self.settings.state[self.param]['value'] += 1
             self.update_value()
+            self.jobid = self.button_up.after(20, self.increase)
 
     def decrease(self):
         if self.settings.state[self.param]['value'] > 0:
