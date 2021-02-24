@@ -16,8 +16,8 @@ class MainWindow:
         self.init_background()
         self.init_title()
 
-        self.settings = Settings(self, relx=0.55, rely=0.1, relwidth=0.4, relheight=0.8)
-        self.field = Field(self, relx=0.05, rely=0.1, relwidth=0.4, relheight=0.8)
+        self.settings = Settings(self, relx=0.52, rely=0.1, relwidth=0.46, relheight=0.8)
+        self.field = Field(self, relx=0.02, rely=0.1, relwidth=0.46, relheight=0.8)
 
     def init_background(self):
         self.app.master["bg"] = MainWindow.BG_COLOR
