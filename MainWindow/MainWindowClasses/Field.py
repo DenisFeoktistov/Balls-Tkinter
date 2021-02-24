@@ -1,4 +1,5 @@
 import tkinter
+from copy import copy
 from random import randint, choice
 from .Ball import *
 from .Point import *
@@ -9,7 +10,8 @@ class Field:
         # window: MainWindow, relx: real, rely: real,
         # relwidth: real, relheight: real,
         # title: tkinter.Label, canvas: tkinter.Canvas
-        # ball_ids: dictionary, balls: list
+        # ball_ids: dictionary, balls: list, active: bool
+        # ball_collisions: set, collision_blacklist: set
 
         self.window = window
         self.relx = relx
@@ -18,6 +20,8 @@ class Field:
         self.relheight = relheight
         self.ball_ids = {}
         self.ball_collisions = set()
+        self.collision_blacklist = set()
+        self.active = False
 
         self.init_title()
         self.init_canvas()
@@ -53,12 +57,17 @@ class Field:
             self.balls.append(Ball(self, Point(randint(size + 1, self.canvas.winfo_width() - size - 1),
                                                randint(size + 1, self.canvas.winfo_height() - size - 1)),
                                    size, 1, Point(velocity_x, velocity_y), 'red'))
-        self.update()
+        if not self.active:
+            self.update()
+            self.active = True
 
     def update(self):
+        self.collision_blacklist = copy(self.ball_collisions)
         self.ball_collisions.clear()
         for ball in self.balls:
             ball.move(1 / self.window.app.FPS)
         for collision in self.ball_collisions:
+            if collision in self.collision_blacklist:
+                continue
             collide_balls(collision[0], collision[1])
         self.canvas.after(1000 // self.window.app.FPS, self.update)
