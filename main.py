@@ -5,7 +5,7 @@ from MainWindow.MainWindow import MainWindow
 
 
 class App:
-    FPS = 60
+    FPS = 120
 
     def __init__(self):
         self.master = tkinter.Tk()

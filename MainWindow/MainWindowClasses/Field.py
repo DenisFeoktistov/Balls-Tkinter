@@ -54,8 +54,8 @@ class Field:
             size = randint(state['size']['min'], max_size)
             velocity_x = randint(state['velocity']['min'], max_velocity) * choice([-1, 1])
             velocity_y = randint(state['velocity']['min'], max_velocity) * choice([-1, 1])
-            self.balls.append(Ball(self, Point(randint(size + 1, self.canvas.winfo_width() - size - 1),
-                                               randint(size + 1, self.canvas.winfo_height() - size - 1)),
+            self.balls.append(Ball(self, Point(randint(size + 8, self.canvas.winfo_width() - size - 8),
+                                               randint(size + 8, self.canvas.winfo_height() - size - 8)),
                                    size, 1, Point(velocity_x, velocity_y), 'red'))
         if not self.active:
             self.update()
