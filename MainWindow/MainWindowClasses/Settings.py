@@ -75,13 +75,13 @@ class ParamWidget:
         if self.settings.state[self.param]['value'] < 100:
             self.settings.state[self.param]['value'] += 1
             self.update_value()
-        self.job_id = self.button_up.after(30, self.increase)
+        self.job_id = self.button_up.after(10, self.increase)
 
     def decrease(self):
         if self.settings.state[self.param]['value'] > 0:
             self.settings.state[self.param]['value'] -= 1
             self.update_value()
-        self.job_id = self.button_up.after(30, self.decrease)
+        self.job_id = self.button_up.after(10, self.decrease)
 
 
 class Settings:
