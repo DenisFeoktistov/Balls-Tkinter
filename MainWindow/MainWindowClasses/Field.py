@@ -53,10 +53,18 @@ class Field:
                 state['size']['max'] - state['size']['min']) // 100
         max_velocity = state['velocity']['min'] + state['velocity']['value'] * (
                 state['velocity']['max'] - state['velocity']['min']) // 100
-        k = state['vector\nscale']['min'] + (state['vector\nscale']['max'] - state['vector\nscale']['min']) * \
-            state['vector\nscale']['value'] // 100
+        k = state['vector scale']['min'] + (state['vector scale']['max'] - state['vector scale']['min']) * \
+            state['vector scale']['value'] // 100
         count = randint(state['count']['min'], max_count)
+
+        density = dict()
+        for color in ["red", "blue", "green"]:
+            density[color] = state[f'{color} density']['min'] + (
+                state[f'{color} density']['max'] - state[f'{color} density']['min']) *\
+                             state[f'{color} density']['value']
         for _ in range(count):
+            color = choice(["green", "red", "blue"])
+
             size = randint(state['size']['min'], max_size)
             velocity_x = randint(state['velocity']['min'], max_velocity) * choice([-1, 1])
             velocity_y = randint(state['velocity']['min'], max_velocity) * choice([-1, 1])
@@ -64,7 +72,7 @@ class Field:
                                                        self.canvas.winfo_width() - size - self.BORDER_THICKNESS - 1),
                                                randint(size + self.BORDER_THICKNESS + 1,
                                                        self.canvas.winfo_height() - size - self.BORDER_THICKNESS - 1)),
-                                   size, 1, Point(velocity_x, velocity_y), 'red', k))
+                                   size, density[color], Point(velocity_x, velocity_y), color, k))
         if not self.active:
             self.update()
             self.active = True
