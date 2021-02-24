@@ -28,24 +28,37 @@ class Ball:
                                  self.pos.x + self.radius, self.pos.y + self.radius)
         self.check_collisions()
 
-    def collide_wall_vertical(self):
+    def collide_wall_vertical(self, num):
+        if num:
+            self.field.canvas.coords(self.oval, 7, self.pos.y - self.radius, 7 + 2 * self.radius, self.pos.y + self.radius)
+        else:
+            self.field.canvas.coords(self.oval, self.field.canvas.winfo_width() - 7, self.pos.y - self.radius,
+                                     self.field.canvas.winfo_width() - 7 - 2 * self.radius, self.pos.y + self.radius)
         self.velocity.x *= -1
 
-    def collide_wall_horizontal(self):
+    def collide_wall_horizontal(self, num):
+        if num:
+            self.field.canvas.coords(self.oval, self.pos.x - self.radius, 7, self.pos.x + self.radius, 7 + 2 * self.radius)
+        else:
+            self.field.canvas.coords(self.oval, self.pos.x - self.radius, self.field.canvas.winfo_height() - 7,
+                                     self.pos.x + self.radius, self.field.canvas.winfo_height() - 7 - 2 * self.radius)
+
         self.velocity.y *= -1
 
     def check_collisions(self):
         if self.pos.x - self.radius - 7 < -self.EPS or self.pos.x + self.radius - self.field.canvas.winfo_width() + 7 > self.EPS:
+            num = self.pos.x - self.radius - 7 < -self.EPS
             if self.ignore_vertical:
                 self.ignore_vertical = False
             else:
-                self.collide_wall_vertical()
+                self.collide_wall_vertical(num)
                 self.ignore_vertical = True
         if self.pos.y - self.radius - 7 < -self.EPS or self.pos.y + self.radius - self.field.canvas.winfo_height() + 7 > self.EPS:
+            num = self.pos.y - self.radius - 7 < -self.EPS
             if self.ignore_horizontal:
                 self.ignore_horizontal = False
             else:
-                self.collide_wall_horizontal()
+                self.collide_wall_horizontal(num)
                 self.ignore_horizontal = True
         overlapping = self.field.canvas.find_overlapping(self.pos.x - self.radius, self.pos.y - self.radius,
                                                          self.pos.x + self.radius, self.pos.y + self.radius)
@@ -65,7 +78,9 @@ def ball_overlap(a, b):
 
 
 def collide_balls(a, b):
-    a.velocity, b.velocity = (a.velocity - (2 * b.mass / (a.mass + b.mass)) * ((a.velocity - b.velocity) * (a.pos - b.pos)) / abs(
+    a.velocity, b.velocity = (a.velocity - (2 * b.mass / (a.mass + b.mass)) * (
+                (a.velocity - b.velocity) * (a.pos - b.pos)) / abs(
         a.pos - b.pos) ** 2 * (a.pos - b.pos)), \
-                             (b.velocity - (2 * a.mass / (a.mass + b.mass)) * ((b.velocity - a.velocity) * (b.pos - a.pos)) / abs(
-        b.pos - a.pos) ** 2 * (b.pos - a.pos))
+                             (b.velocity - (2 * a.mass / (a.mass + b.mass)) * (
+                                         (b.velocity - a.velocity) * (b.pos - a.pos)) / abs(
+                                 b.pos - a.pos) ** 2 * (b.pos - a.pos))
