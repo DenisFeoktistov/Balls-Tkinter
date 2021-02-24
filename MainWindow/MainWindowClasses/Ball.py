@@ -47,31 +47,32 @@ class Ball:
 
     def collide_wall_vertical(self, num):
         if num:
-            self.field.canvas.coords(self.oval, self.field.BORDER_THICKNESS, self.pos.y - self.radius,
-                                     self.field.BORDER_THICKNESS + 2 * self.radius,
+            self.field.canvas.coords(self.oval, self.field.BORDER_THICKNESS + 1, self.pos.y - self.radius,
+                                     self.field.BORDER_THICKNESS + 2 * self.radius + 1,
                                      self.pos.y + self.radius)
         else:
-            self.field.canvas.coords(self.oval, self.field.canvas.winfo_width() - self.field.BORDER_THICKNESS,
+            self.field.canvas.coords(self.oval, self.field.canvas.winfo_width() - self.field.BORDER_THICKNESS - 1,
                                      self.pos.y - self.radius,
-                                     self.field.canvas.winfo_width() - self.field.BORDER_THICKNESS - 2 * self.radius,
+                                     self.field.canvas.winfo_width() - self.field.BORDER_THICKNESS - 2 * self.radius - 1,
                                      self.pos.y + self.radius)
         self.velocity.x *= -1
 
     def collide_wall_horizontal(self, num):
         if num:
-            self.field.canvas.coords(self.oval, self.pos.x - self.radius, self.field.BORDER_THICKNESS,
+            self.field.canvas.coords(self.oval, self.pos.x - self.radius, self.field.BORDER_THICKNESS + 1,
                                      self.pos.x + self.radius,
-                                     self.field.BORDER_THICKNESS + 2 * self.radius)
+                                     self.field.BORDER_THICKNESS + 2 * self.radius + 1)
         else:
             self.field.canvas.coords(self.oval, self.pos.x - self.radius,
-                                     self.field.canvas.winfo_height() - self.field.BORDER_THICKNESS,
+                                     self.field.canvas.winfo_height() - self.field.BORDER_THICKNESS - 1,
                                      self.pos.x + self.radius,
-                                     self.field.canvas.winfo_height() - self.field.BORDER_THICKNESS - 2 * self.radius)
+                                     self.field.canvas.winfo_height() - self.field.BORDER_THICKNESS - 2 * self.radius - 1)
 
         self.velocity.y *= -1
 
     def check_collisions(self):
-        if self.pos.x - self.radius - self.field.BORDER_THICKNESS < -self.EPS or self.pos.x + self.radius - self.field.canvas.winfo_width() + self.field.BORDER_THICKNESS > self.EPS:
+        if self.pos.x - self.radius - self.field.BORDER_THICKNESS < -self.EPS or \
+                self.pos.x + self.radius - self.field.canvas.winfo_width() + self.field.BORDER_THICKNESS > self.EPS:
             num = self.pos.x - self.radius - self.field.BORDER_THICKNESS < -self.EPS
             if self.ignore_vertical:
                 self.ignore_vertical = False
