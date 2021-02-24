@@ -14,8 +14,8 @@
     "min": 5,
     "max": 15
   },
-  "vector scale": {
-    "value": 100,
+  "vector\nscale": {
+    "value": 3,
     "min": 0.1,
     "max": 2
   }

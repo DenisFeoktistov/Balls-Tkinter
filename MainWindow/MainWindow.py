@@ -26,8 +26,8 @@ class MainWindow:
         self.app.master.title("Balls")
 
     def resize(self):
-        SCREEN_WIDTH = self.app.master.winfo_screenwidth()
-        SCREEN_HEIGHT = self.app.master.winfo_screenheight()
-        window_x = (SCREEN_WIDTH - MainWindow.WINDOW_WIDTH) // 2
-        window_y = (SCREEN_HEIGHT - MainWindow.WINDOW_HEIGHT) // 2
+        screen_width = self.app.master.winfo_screenwidth()
+        screen_height = self.app.master.winfo_screenheight()
+        window_x = (screen_width - MainWindow.WINDOW_WIDTH) // 2
+        window_y = (screen_height - MainWindow.WINDOW_HEIGHT) // 2
         self.app.master.geometry(f"{MainWindow.WINDOW_WIDTH}x{MainWindow.WINDOW_HEIGHT}+{window_x}+{window_y}")
