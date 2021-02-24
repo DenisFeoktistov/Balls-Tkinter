@@ -63,7 +63,7 @@ class ParamWidget:
         if self.settings.state[self.param]['value'] < 100:
             self.settings.state[self.param]['value'] += 1
             self.update_value()
-        self.job_id = self.button_up.after(500, self.increase)
+        self.job_id = self.button_up.after(200, self.increase)
 
     def decrease_event_handler(self):
         if self.settings.state[self.param]['value'] > 0:
