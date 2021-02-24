@@ -8,6 +8,7 @@ class App:
     FPS = 120
 
     def __init__(self):
+        # master: tkinter.Tk, main_window: MainWindow
         self.master = tkinter.Tk()
 
         self.main_window = MainWindow(self)

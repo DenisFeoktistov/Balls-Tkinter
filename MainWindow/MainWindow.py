@@ -5,22 +5,24 @@ from .MainWindowClasses.Settings import Settings
 class MainWindow:
     WINDOW_WIDTH = 1000
     WINDOW_HEIGHT = 800
-    COLOR = '#B4B4B4'
+    BG_COLOR = '#B4B4B4'
+    FG_COLOR = '#000000'
 
     def __init__(self, app):
+        # app: App, settings: Settings, field: Field
         self.app = app
 
         self.resize()
-        self.adding_background()
-        self.adding_title()
+        self.init_background()
+        self.init_title()
 
         self.settings = Settings(self, relx=0.55, rely=0.1, relwidth=0.4, relheight=0.8)
         self.field = Field(self, relx=0.05, rely=0.1, relwidth=0.4, relheight=0.8)
 
-    def adding_background(self):
-        self.app.master["bg"] = MainWindow.COLOR
+    def init_background(self):
+        self.app.master["bg"] = MainWindow.BG_COLOR
 
-    def adding_title(self):
+    def init_title(self):
         self.app.master.title("Balls")
 
     def resize(self):
