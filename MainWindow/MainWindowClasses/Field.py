@@ -47,7 +47,7 @@ class Field:
 
     def generate(self, state):
         self.canvas.delete('all')
-        max_count = state['count']['min'] + state['count']['value'] * (
+        count = state['count']['min'] + state['count']['value'] * (
                 state['count']['max'] - state['count']['min']) // 100
         max_size = state['size']['min'] + state['size']['value'] * (
                 state['size']['max'] - state['size']['min']) // 100
@@ -55,7 +55,6 @@ class Field:
                 state['velocity']['max'] - state['velocity']['min']) // 100
         k = state['vector scale']['min'] + (state['vector scale']['max'] - state['vector scale']['min']) * \
             state['vector scale']['value'] // 100
-        count = randint(state['count']['min'], max_count)
 
         density = dict()
         for color in ["red", "blue", "green"]:
