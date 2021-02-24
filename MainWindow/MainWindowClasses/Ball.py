@@ -1,4 +1,3 @@
-from sys import float_info
 import tkinter
 
 
@@ -17,8 +16,6 @@ class VelocityVector:
 
 
 class Ball:
-    EPS = float_info.epsilon
-
     def __init__(self, field, pos, radius, density, velocity, color, k):
         # field: Field, pos: Point, radius: int, density: float,
         # velocity: Point, color: Color, mass: float
@@ -71,15 +68,17 @@ class Ball:
         self.velocity.y *= -1
 
     def check_collisions(self):
-        if self.pos.x - self.radius - self.field.BORDER_THICKNESS < -self.EPS or self.pos.x + self.radius - self.field.canvas.winfo_width() + self.field.BORDER_THICKNESS > self.EPS:
-            num = self.pos.x - self.radius - self.field.BORDER_THICKNESS < -self.EPS
+        if self.pos.x - self.radius - self.field.BORDER_THICKNESS < 0 or \
+                self.pos.x + self.radius - self.field.canvas.winfo_width() + self.field.BORDER_THICKNESS > 0:
+            num = self.pos.x - self.radius - self.field.BORDER_THICKNESS < 0
             if self.ignore_vertical:
                 self.ignore_vertical = False
             else:
                 self.collide_wall_vertical(num)
                 self.ignore_vertical = True
-        if self.pos.y - self.radius - self.field.BORDER_THICKNESS < -self.EPS or self.pos.y + self.radius - self.field.canvas.winfo_height() + self.field.BORDER_THICKNESS > self.EPS:
-            num = self.pos.y - self.radius - self.field.BORDER_THICKNESS < -self.EPS
+        if self.pos.y - self.radius - self.field.BORDER_THICKNESS < 0 or \
+                self.pos.y + self.radius - self.field.canvas.winfo_height() + self.field.BORDER_THICKNESS > 0:
+            num = self.pos.y - self.radius - self.field.BORDER_THICKNESS < 0
             if self.ignore_horizontal:
                 self.ignore_horizontal = False
             else:
@@ -99,7 +98,7 @@ class Ball:
 
 
 def ball_overlap(a, b):
-    return abs(a.pos - b.pos) - (a.radius + b.radius) <= Ball.EPS
+    return abs(a.pos - b.pos) - (a.radius + b.radius) <= 0
 
 
 def collide_balls(a, b):
