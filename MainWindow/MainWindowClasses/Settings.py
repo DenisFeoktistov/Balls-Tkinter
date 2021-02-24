@@ -3,6 +3,9 @@ import json
 
 
 class ParamWidget:
+    WAIT_TIME1 = 200
+    WAIT_TIME2 = 10
+
     def __init__(self, settings, param, relx, rely, relwidth, relheight):
         # settings: Settings, relx: float, rely: float, relwidth: float, relheight: float, param: str, job_id: int
 
@@ -63,25 +66,25 @@ class ParamWidget:
         if self.settings.state[self.param]['value'] < 100:
             self.settings.state[self.param]['value'] += 1
             self.update_value()
-        self.job_id = self.button_up.after(200, self.increase)
+        self.job_id = self.button_up.after(ParamWidget.WAIT_TIME1, self.increase)
 
     def decrease_event_handler(self):
         if self.settings.state[self.param]['value'] > 0:
             self.settings.state[self.param]['value'] -= 1
             self.update_value()
-        self.job_id = self.button_up.after(500, self.decrease)
+        self.job_id = self.button_up.after(ParamWidget.WAIT_TIME1, self.decrease)
 
     def increase(self):
         if self.settings.state[self.param]['value'] < 100:
             self.settings.state[self.param]['value'] += 1
             self.update_value()
-        self.job_id = self.button_up.after(10, self.increase)
+        self.job_id = self.button_up.after(ParamWidget.WAIT_TIME2, self.increase)
 
     def decrease(self):
         if self.settings.state[self.param]['value'] > 0:
             self.settings.state[self.param]['value'] -= 1
             self.update_value()
-        self.job_id = self.button_up.after(10, self.decrease)
+        self.job_id = self.button_up.after(ParamWidget.WAIT_TIME2, self.decrease)
 
 
 class Settings:
