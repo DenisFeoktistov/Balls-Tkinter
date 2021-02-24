@@ -48,6 +48,8 @@ class Field:
                 state['size']['max'] - state['size']['min']) // 100
         max_velocity = state['velocity']['min'] + state['velocity']['value'] * (
                 state['velocity']['max'] - state['velocity']['min']) // 100
+        k = state['vector scale']['min'] + (state['vector scale']['max'] - state['vector scale']['min']) * \
+            state['vector scale']['value'] // 100
         count = randint(state['count']['min'], max_count)
         self.balls = list()
         for _ in range(count):
@@ -56,7 +58,7 @@ class Field:
             velocity_y = randint(state['velocity']['min'], max_velocity) * choice([-1, 1])
             self.balls.append(Ball(self, Point(randint(size + 8, self.canvas.winfo_width() - size - 8),
                                                randint(size + 8, self.canvas.winfo_height() - size - 8)),
-                                   size, 1, Point(velocity_x, velocity_y), 'red'))
+                                   size, 1, Point(velocity_x, velocity_y), 'red', k))
         if not self.active:
             self.update()
             self.active = True

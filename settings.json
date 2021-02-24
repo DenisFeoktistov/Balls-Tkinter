@@ -1,1 +1,22 @@
-{"size": {"value": 98, "min": 10, "max": 50}, "velocity": {"value": 100, "min": 10, "max": 150}, "count": {"value": 32, "min": 5, "max": 15}}
+{
+  "size": {
+    "value": 57,
+    "min": 10,
+    "max": 50
+  },
+  "velocity": {
+    "value": 100,
+    "min": 10,
+    "max": 150
+  },
+  "count": {
+    "value": 100,
+    "min": 5,
+    "max": 15
+  },
+  "vector scale": {
+    "value": 100,
+    "min": 0.1,
+    "max": 2
+  }
+}

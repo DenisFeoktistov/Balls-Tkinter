@@ -4,23 +4,22 @@ import tkinter
 
 
 class VelocityVector:
-    K = 1.0
-
-    def __init__(self, ball):
+    def __init__(self, ball, k):
+        self.k = k
         self.ball = ball
-        self.end = self.ball.pos + self.ball.velocity * VelocityVector.K
+        self.end = self.ball.pos + self.ball.velocity * self.k
         self.arrow = self.ball.field.canvas.create_line(self.ball.pos.x, self.ball.pos.y, self.end.x, self.end.y,
                                                         arrow=tkinter.LAST)
 
     def update(self):
-        self.end = self.ball.pos + self.ball.velocity * VelocityVector.K
+        self.end = self.ball.pos + self.ball.velocity * self.k
         self.ball.field.canvas.coords(self.arrow, self.ball.pos.x, self.ball.pos.y, self.end.x, self.end.y)
 
 
 class Ball:
     EPS = float_info.epsilon
 
-    def __init__(self, field, pos, radius, density, velocity, color):
+    def __init__(self, field, pos, radius, density, velocity, color, k):
         # field: Field, pos: Point, radius: int, density: real,
         # velocity: Point, color: Color, mass: real
         # ignore_horizontal: bool, ignore_vertical: bool
@@ -37,7 +36,7 @@ class Ball:
         self.ignore_horizontal = False
         self.ignore_vertical = False
 
-        self.vector = VelocityVector(self)
+        self.vector = VelocityVector(self, k)
 
     def move(self, time):
         self.pos += self.velocity * time
