@@ -1,5 +1,6 @@
 import tkinter
 import json
+from shutil import copyfile
 
 
 class ParamWidget:
@@ -97,7 +98,7 @@ class Settings:
         self.rely = rely
         self.relwidth = relwidth
         self.relheight = relheight
-        self.state = {}
+        self.state = dict()
         self.widgets = list()
         self.regenerate_button = None
         self.title = None
@@ -107,8 +108,13 @@ class Settings:
         self.init_param_widgets()
 
     def init_param_widgets(self):
-        with open("settings.json", "r") as file:
-            self.state = json.load(file)
+        try:
+            with open("settings.json", "r") as file:
+                self.state = json.load(file)
+        except FileNotFoundError:
+            copyfile("settings_default.json", "settings.json")
+            with open("settings.json", "r") as file:
+                self.state = json.load(file)
         for i, param in enumerate(self.state):
             self.widgets.append(ParamWidget(relx=self.relx,
                                             rely=self.rely + self.relheight * 0.1 + self.relheight * 0.85 * i / len(

@@ -54,7 +54,7 @@ class Field:
         max_velocity = state['velocity']['min'] + state['velocity']['value'] * (
                 state['velocity']['max'] - state['velocity']['min']) // 100
         k = state['vector scale']['min'] + (state['vector scale']['max'] - state['vector scale']['min']) * \
-            state['vector scale']['value'] // 100
+            state['vector scale']['value'] / 100
 
         density = dict()
         for color in ["red", "blue", "green"]:
