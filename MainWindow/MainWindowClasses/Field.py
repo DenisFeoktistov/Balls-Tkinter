@@ -15,6 +15,27 @@ def quadratic_solve(a, b, c):
     else:
         return ()
 
+def collision_time(a, b):
+    if isinstance(a, Wall):
+        a, b = b, a
+    if isinstance(b, Wall):
+        if b == Wall.UP:
+            return a.pos.y / a.velocity.y
+        elif b == Wall.DOWN:
+            return (a.field.canvas.winfo_height() - a.pos.y) / a.velocity.y
+        elif b == Wall.LEFT:
+            return a.pos.x / a.velocity.x
+        elif b == Wall.RIGHT:
+            return (a.field.canvas.winfo_width() - a.pos.x) / a.velocity.x
+    elif isinstance(b, Ball):
+        res = quadratic_solve((a.velocity1 - b.velocity) * (a.velocity1 - b.velocity),
+                              2 * (a.pos - b.pos) * (a.velocity - b.velocity),
+                              (a.pos - b.pos) * (a.pos - b.pos) - (a.radius + b.radius) ** 2)
+        if len(res) == 2:
+            return res[0]
+        else:
+            return None
+
 class Wall(Enum):
     UP = 0
     RIGHT = 1
@@ -104,6 +125,8 @@ class Field:
             for b2 in self.balls:
                 if b2 == b1:
                     continue
+
+
 
         if not self.active:
             self.update()
