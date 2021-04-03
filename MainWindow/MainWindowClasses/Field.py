@@ -2,7 +2,32 @@ from copy import copy
 from random import randint, choice
 from .Ball import *
 from .Point import *
+from sortedcontainers import SortedSet
+from enum import Enum
 
+
+def quadratic_solve(a, b, c):
+    d = b*b - 4*a*c
+    if d > 0:
+        return (-b - sqrt(d)) / (2 * a), (-b + sqrt(d)) / (2 * a)
+    elif d == 0:
+        return -b / (2 * a),
+    else:
+        return ()
+
+class Wall(Enum):
+    UP = 0
+    RIGHT = 1
+    DOWN = 2
+    LEFT = 3
+
+class Event:
+    def __init__(self, time, actor1, actor2):
+        # time: float, actor1: Ball/Wall, actor2: Ball/Wall
+
+        self.time = time
+        self.actor1 = actor1
+        self.actor2 = actor2
 
 class Field:
     BORDER_THICKNESS = 7
@@ -10,9 +35,10 @@ class Field:
     def __init__(self, window, relx, rely, relwidth, relheight):
         # window: MainWindow, relx: float, rely: float,
         # relwidth: float, relheight: float,
-        # title: tkinter.Label, canvas: tkinter.Canvas
-        # ball_ids: dict, balls: list, active: bool
-        # ball_collisions: set, collision_blacklist: set
+        # title: tkinter.Label, canvas: tkinter.Canvas,
+        # ball_ids: dict, balls: list, active: bool,
+        # ball_collisions: set, collision_blacklist: set,
+        # events: SortedSet<Event>
 
         self.window = window
         self.relx = relx
@@ -26,6 +52,7 @@ class Field:
         self.title = None
         self.canvas = None
         self.balls = list()
+        self.events = SortedSet()
 
         self.init_title()
         self.init_canvas()
@@ -73,6 +100,11 @@ class Field:
                                                randint(size + self.BORDER_THICKNESS + 1,
                                                        self.canvas.winfo_height() - size - self.BORDER_THICKNESS - 1)),
                                    size, density[color], Point(velocity_x, velocity_y), color, k))
+        for b1 in self.balls:
+            for b2 in self.balls:
+                if b2 == b1:
+                    continue
+
         if not self.active:
             self.update()
             self.active = True
