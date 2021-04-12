@@ -2,8 +2,9 @@ from copy import copy
 from random import randint, choice
 from .Ball import *
 from .Point import *
-from sortedcontainers import SortedSet
+from sortedcontainers import SortedList
 from enum import Enum
+from itertools import combinations as combs
 
 
 def quadratic_solve(a, b, c):
@@ -23,19 +24,19 @@ def collision_time(a, b):
         if b == Wall.UP:
             if a.velocity.y >= 0:
                 return None
-            return abs(a.pos.y / a.velocity.y)
+            return abs((a.pos.y - a.radius) / a.velocity.y)
         elif b == Wall.DOWN:
             if a.velocity.y <= 0:
                 return None
-            return abs((a.field.canvas.winfo_height() - a.pos.y) / a.velocity.y)
+            return abs((a.field.canvas.winfo_height() - a.pos.y - a.radius) / a.velocity.y)
         elif b == Wall.LEFT:
             if a.velocity.x >= 0:
                 return None
-            return abs(a.pos.x / a.velocity.x)
+            return abs((a.pos.x - a.radius) / a.velocity.x)
         elif b == Wall.RIGHT:
             if a.velocity.x <= 0:
                 return None
-            return abs((a.field.canvas.winfo_width() - a.pos.x) / a.velocity.x)
+            return abs((a.field.canvas.winfo_width() - a.pos.x - a.radius) / a.velocity.x)
     elif isinstance(b, Ball):
         res = quadratic_solve((a.velocity - b.velocity) * (a.velocity - b.velocity),
                               2 * (a.pos - b.pos) * (a.velocity - b.velocity),
@@ -78,21 +79,10 @@ class Event:
         self.time = collision_time(a, b) + offset
 
     def __eq__(self, other):
-        if type(self.obstacle) is not type(other.obstacle):
-            return False
-        a = self.ball == other.ball and self.obstacle == other.obstacle
-        b = isinstance(self.obstacle, Ball) and self.ball == other.obstacle and self.obstacle == other.ball
-        return a or b
+        return self.time == other.time
 
     def __lt__(self, other):
-        iseq = False
-        if type(self.obstacle) is not type(other.obstacle):
-            iseq = False
-        else:
-            a = self.ball == other.ball and self.obstacle == other.obstacle
-            b = isinstance(self.obstacle, Ball) and self.ball == other.obstacle and self.obstacle == other.ball
-            iseq = a or b
-        return not iseq and self.time < other.time
+        return self.time < other.time
 
     def __hash__(self):
         return hash((self.ball, self.obstacle, self.time))
@@ -114,7 +104,7 @@ class Field:
         # title: tkinter.Label, canvas: tkinter.Canvas,
         # ball_ids: dict, balls: list, active: bool,
         # ball_collisions: set, collision_blacklist: set,
-        # events: SortedSet<Event>, timer: float
+        # events: SortedList<Event>, timer: float
 
         self.window = window
         self.relx = relx
@@ -128,7 +118,7 @@ class Field:
         self.title = None
         self.canvas = None
         self.balls = list()
-        self.events = SortedSet()
+        self.events = SortedList()
         self.timer = 0
 
         self.init_title()
@@ -151,6 +141,7 @@ class Field:
 
     def generate(self, state):
         self.timer = 0
+        self.events.clear()
         self.canvas.delete('all')
         count = state['count']['min'] + state['count']['value'] * (
                 state['count']['max'] - state['count']['min']) // 100
@@ -178,12 +169,12 @@ class Field:
                                                randint(size + self.BORDER_THICKNESS + 1,
                                                        self.canvas.winfo_height() - size - self.BORDER_THICKNESS - 1)),
                                    size, density[color], Point(velocity_x, velocity_y), color, k))
+        for (b1, b2) in combs(self.balls, 2):
+            if b2 == b1:
+                continue
+            if collision_time(b1, b2) is not None:
+                self.events.add(Event(b1, b2, self.timer))
         for b1 in self.balls:
-            for b2 in self.balls:
-                if b2 == b1:
-                    continue
-                if collision_time(b1, b2) is not None:
-                    self.events.add(Event(b1, b2, self.timer))
             for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
                 if collision_time(b1, w) is not None:
                     self.events.add(Event(b1, w, self.timer))
@@ -199,29 +190,29 @@ class Field:
             self.timer += 1 / self.window.app.FPS
             self.canvas.after(1000 // self.window.app.FPS, self.update)
         else:
-            event = self.events[0]
-            self.events.remove(event)
+            event = self.events.pop(0)
             tdelta = event.time - self.timer
             for ball in self.balls:
                 ball.move(tdelta)
             self.timer += tdelta
-            self.events = SortedSet(filter(lambda x: x.ball != event.ball and x.obstacle != event.ball, self.events))
-            for b2 in self.balls:
-                if event.ball == b2:
-                    continue
-                if collision_time(event.ball, b2) is not None:
-                    self.events.add(Event(event.ball, b2, self.timer))
+            self.events = SortedList(filter(lambda x: x.ball != event.ball and x.obstacle != event.ball, self.events))
+            
             if isinstance(event.obstacle, Ball):
                 collide_balls(event.ball, event.obstacle)
-                self.events = SortedSet(
+                self.events = SortedList(
                     filter(lambda x: x.ball != event.obstacle and x.obstacle != event.obstacle, self.events))
                 for b2 in self.balls:
-                    if event.obstacle == b2:
+                    if event.ball == b2 or event.obstacle == b2:
                         continue
                     if collision_time(event.obstacle, b2) is not None:
                         self.events.add(Event(event.obstacle, b2, self.timer))
             elif isinstance(event.obstacle, Wall):
                 collide_with_wall(event.ball, event.obstacle)
+            for b2 in self.balls:
+                if event.ball == b2:
+                    continue
+                if collision_time(event.ball, b2) is not None:
+                    self.events.add(Event(event.ball, b2, self.timer))
             self.canvas.after(int(tdelta * 1000), self.update)
 
         # self.timer += 1 / self.window.app.FPS
