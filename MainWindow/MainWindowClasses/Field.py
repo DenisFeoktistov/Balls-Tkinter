@@ -1,4 +1,3 @@
-from copy import copy
 from random import randint, choice
 from .Ball import *
 from .Point import *
@@ -8,6 +7,10 @@ from itertools import combinations as combs
 
 
 def quadratic_solve(a, b, c):
+    if a == 0:
+        if b == 0:
+            return ()
+        return -c / b,
     d = b * b - 4 * a * c
     if d > 0:
         return (-b - sqrt(d)) / (2 * a), (-b + sqrt(d)) / (2 * a)
@@ -102,8 +105,7 @@ class Field:
         # window: MainWindow, relx: float, rely: float,
         # relwidth: float, relheight: float,
         # title: tkinter.Label, canvas: tkinter.Canvas,
-        # ball_ids: dict, balls: list, active: bool,
-        # ball_collisions: set, collision_blacklist: set,
+        # balls: list, active: bool,
         # events: SortedList<Event>, timer: float
 
         self.window = window
@@ -111,9 +113,6 @@ class Field:
         self.rely = rely
         self.relwidth = relwidth
         self.relheight = relheight
-        self.ball_ids = dict()
-        # self.ball_collisions = set()
-        # self.collision_blacklist = set()
         self.active = False
         self.title = None
         self.canvas = None
@@ -172,7 +171,8 @@ class Field:
                         size, density[color], Point(velocity_x, velocity_y), color, k)
             while not self.check_generate(ball):
                 self.canvas.delete(ball.oval)
-                self.canvas.delete(ball.vector.arrow)
+                if self.window.app.DEBUG_ARROWS:
+                    self.canvas.delete(ball.vector.arrow)
                 ball = Ball(self, Point(randint(size + self.BORDER_THICKNESS + 1,
                                                 self.canvas.winfo_width() - size - self.BORDER_THICKNESS - 1),
                                         randint(size + self.BORDER_THICKNESS + 1,
@@ -237,25 +237,3 @@ class Field:
                 if collision_time(event.ball, w) is not None:
                     self.events.add(Event(event.ball, w, self.timer))
             self.canvas.after(int(tdelta * 1000), self.update)
-
-        # self.timer += 1 / self.window.app.FPS
-        # while self.events[0].time < self.timer:
-        #     event = self.events.pop(0)
-        #     event.ball.move(event.time - self.timer + 1 / self.window.app.FPS)
-        #     if isinstance(event.obstacle, Ball):
-        #         event.obstacle.move(event.time - self.timer + 1 / self.window.app.FPS)
-        #         collide_balls(event.ball, event.obstacle)
-        #         event.obstacle.move(self.timer - event.time)
-        #     elif isinstance(event.obstacle, Wall):
-        #         collide_with_wall(event.ball, event.obstacle)
-        #     event.ball.move(self.timer - event.time)
-        #
-        # self.collision_blacklist = copy(self.ball_collisions)
-        # self.ball_collisions.clear()
-        # for ball in self.balls:
-        #     ball.move(1 / self.window.app.FPS)
-        # for collision in self.ball_collisions:
-        #     if collision in self.collision_blacklist:
-        #         continue
-        #     collide_balls(collision[0], collision[1])
-        # self.canvas.after(1000 // self.window.app.FPS, self.update)

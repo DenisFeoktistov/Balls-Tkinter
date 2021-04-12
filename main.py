@@ -6,6 +6,7 @@ from MainWindow.MainWindow import MainWindow
 
 class App:
     FPS = 120
+    DEBUG_ARROWS = False
 
     def __init__(self):
         # master: tkinter.Tk, main_window: MainWindow
