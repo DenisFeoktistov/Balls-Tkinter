@@ -164,11 +164,22 @@ class Field:
             size = randint(state['size']['min'], max_size)
             velocity_x = randint(state['velocity']['min'], max_velocity) * choice([-1, 1])
             velocity_y = randint(state['velocity']['min'], max_velocity) * choice([-1, 1])
-            self.balls.append(Ball(self, Point(randint(size + self.BORDER_THICKNESS + 1,
-                                                       self.canvas.winfo_width() - size - self.BORDER_THICKNESS - 1),
-                                               randint(size + self.BORDER_THICKNESS + 1,
-                                                       self.canvas.winfo_height() - size - self.BORDER_THICKNESS - 1)),
-                                   size, density[color], Point(velocity_x, velocity_y), color, k))
+
+            ball = Ball(self, Point(randint(size + self.BORDER_THICKNESS + 1,
+                                            self.canvas.winfo_width() - size - self.BORDER_THICKNESS - 1),
+                                    randint(size + self.BORDER_THICKNESS + 1,
+                                            self.canvas.winfo_height() - size - self.BORDER_THICKNESS - 1)),
+                        size, density[color], Point(velocity_x, velocity_y), color, k)
+            while not self.check_generate(ball):
+                self.canvas.delete(ball.oval)
+                self.canvas.delete(ball.vector.arrow)
+                ball = Ball(self, Point(randint(size + self.BORDER_THICKNESS + 1,
+                                                self.canvas.winfo_width() - size - self.BORDER_THICKNESS - 1),
+                                        randint(size + self.BORDER_THICKNESS + 1,
+                                                self.canvas.winfo_height() - size - self.BORDER_THICKNESS - 1)),
+                            size, density[color], Point(velocity_x, velocity_y), color, k)
+
+            self.balls.append(ball)
         for (b1, b2) in combs(self.balls, 2):
             if b2 == b1:
                 continue
@@ -182,6 +193,12 @@ class Field:
         if not self.active:
             self.update()
             self.active = True
+
+    def check_generate(self, ball):
+        for ball1 in self.balls:
+            if abs(ball1.pos - ball.pos) < ball1.radius + ball.radius:
+                return False
+        return True
 
     def update(self):
         if self.events[0].time - self.timer > 1 / self.window.app.FPS:
