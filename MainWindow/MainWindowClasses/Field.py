@@ -24,24 +24,24 @@ def collision_time(a, b):
         if b == Wall.UP:
             if a.velocity.y >= 0:
                 return None
-            return abs((a.pos.y - a.radius) / a.velocity.y)
+            return abs((a.pos.y - a.radius - Field.BORDER_THICKNESS) / a.velocity.y)
         elif b == Wall.DOWN:
             if a.velocity.y <= 0:
                 return None
-            return abs((a.field.canvas.winfo_height() - a.pos.y - a.radius) / a.velocity.y)
+            return abs((a.field.canvas.winfo_height() - a.pos.y - a.radius - Field.BORDER_THICKNESS) / a.velocity.y)
         elif b == Wall.LEFT:
             if a.velocity.x >= 0:
                 return None
-            return abs((a.pos.x - a.radius) / a.velocity.x)
+            return abs((a.pos.x - a.radius - Field.BORDER_THICKNESS) / a.velocity.x)
         elif b == Wall.RIGHT:
             if a.velocity.x <= 0:
                 return None
-            return abs((a.field.canvas.winfo_width() - a.pos.x - a.radius) / a.velocity.x)
+            return abs((a.field.canvas.winfo_width() - a.pos.x - a.radius - Field.BORDER_THICKNESS) / a.velocity.x)
     elif isinstance(b, Ball):
         res = quadratic_solve((a.velocity - b.velocity) * (a.velocity - b.velocity),
                               2 * (a.pos - b.pos) * (a.velocity - b.velocity),
                               (a.pos - b.pos) * (a.pos - b.pos) - (a.radius + b.radius) ** 2)
-        if len(res) == 2:
+        if len(res) == 2 and res[0] >= 0:
             return res[0]
         else:
             return None
@@ -206,6 +206,9 @@ class Field:
                         continue
                     if collision_time(event.obstacle, b2) is not None:
                         self.events.add(Event(event.obstacle, b2, self.timer))
+                for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
+                    if collision_time(event.obstacle, w) is not None:
+                        self.events.add(Event(event.obstacle, w, self.timer))
             elif isinstance(event.obstacle, Wall):
                 collide_with_wall(event.ball, event.obstacle)
             for b2 in self.balls:
@@ -213,6 +216,9 @@ class Field:
                     continue
                 if collision_time(event.ball, b2) is not None:
                     self.events.add(Event(event.ball, b2, self.timer))
+            for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
+                if collision_time(event.ball, w) is not None:
+                    self.events.add(Event(event.ball, w, self.timer))
             self.canvas.after(int(tdelta * 1000), self.update)
 
         # self.timer += 1 / self.window.app.FPS
