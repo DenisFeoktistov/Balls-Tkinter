@@ -1,10 +1,11 @@
 from random import randint, choice
 from .Ball import *
 from .Point import *
-from sortedcontainers import SortedList
 from enum import Enum
 from itertools import combinations as combs
 
+
+INF = int(1e9)
 
 def quadratic_solve(a, b, c):
     if a == 0:
@@ -106,7 +107,7 @@ class Field:
         # relwidth: float, relheight: float,
         # title: tkinter.Label, canvas: tkinter.Canvas,
         # balls: list, active: bool,
-        # events: SortedList<Event>, timer: float
+        # events: dict, timer: float
 
         self.window = window
         self.relx = relx
@@ -117,7 +118,7 @@ class Field:
         self.title = None
         self.canvas = None
         self.balls = list()
-        self.events = SortedList()
+        self.events = dict()
         self.timer = 0
 
         self.init_title()
@@ -140,7 +141,7 @@ class Field:
 
     def generate(self, state):
         self.timer = 0
-        self.events.clear()
+        self.events = dict()
         self.canvas.delete('all')
         count = state['count']['min'] + state['count']['value'] * (
                 state['count']['max'] - state['count']['min']) // 100
@@ -180,19 +181,39 @@ class Field:
                             size, density[color], Point(velocity_x, velocity_y), color, k)
 
             self.balls.append(ball)
-        for (b1, b2) in combs(self.balls, 2):
-            if b2 == b1:
-                continue
-            if collision_time(b1, b2) is not None:
-                self.events.add(Event(b1, b2, self.timer))
         for b1 in self.balls:
-            for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
-                if collision_time(b1, w) is not None:
-                    self.events.add(Event(b1, w, self.timer))
+            self.events[b1] = self.min_event(b1)
+
+        # for (b1, b2) in combs(self.balls, 2):
+        #     if b2 == b1:
+        #         continue
+        #     if collision_time(b1, b2) is not None:
+        #         self.events.add(Event(b1, b2, self.timer))
+        # for b1 in self.balls:
+        #     for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
+        #         if collision_time(b1, w) is not None:
+        #             self.events.add(Event(b1, w, self.timer))
 
         if not self.active:
             self.update()
             self.active = True
+
+    def min_event(self, b1):
+        min_time = INF
+        event = None
+        for b2 in self.balls:
+            if b1 == b2:
+                continue
+            if collision_time(b1, b2) is not None:
+                temp = Event(b1, b2, self.timer)
+                if temp.time < min_time:
+                    event = temp
+        for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
+            if collision_time(b1, w) is not None:
+                temp = Event(b1, w, self.timer)
+                if temp.time < min_time:
+                    event = temp
+        return event
 
     def check_generate(self, ball):
         for ball1 in self.balls:
@@ -201,39 +222,23 @@ class Field:
         return True
 
     def update(self):
-        if self.events[0].time - self.timer > 1 / self.window.app.FPS:
+        event = min(self.events.values())
+        print(event.time)
+        if event.time - self.timer > 1 / self.window.app.FPS:
             for ball in self.balls:
                 ball.move(1 / self.window.app.FPS)
             self.timer += 1 / self.window.app.FPS
             self.canvas.after(1000 // self.window.app.FPS, self.update)
         else:
-            event = self.events.pop(0)
             tdelta = event.time - self.timer
             for ball in self.balls:
                 ball.move(tdelta)
             self.timer += tdelta
-            self.events = SortedList(filter(lambda x: x.ball != event.ball and x.obstacle != event.ball, self.events))
+            self.events[event.ball] = self.min_event(event.ball)
             
             if isinstance(event.obstacle, Ball):
                 collide_balls(event.ball, event.obstacle)
-                self.events = SortedList(
-                    filter(lambda x: x.ball != event.obstacle and x.obstacle != event.obstacle, self.events))
-                for b2 in self.balls:
-                    if event.ball == b2 or event.obstacle == b2:
-                        continue
-                    if collision_time(event.obstacle, b2) is not None:
-                        self.events.add(Event(event.obstacle, b2, self.timer))
-                for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
-                    if collision_time(event.obstacle, w) is not None:
-                        self.events.add(Event(event.obstacle, w, self.timer))
+                self.events[event.obstacle] = self.min_event(event.obstacle)
             elif isinstance(event.obstacle, Wall):
                 collide_with_wall(event.ball, event.obstacle)
-            for b2 in self.balls:
-                if event.ball == b2:
-                    continue
-                if collision_time(event.ball, b2) is not None:
-                    self.events.add(Event(event.ball, b2, self.timer))
-            for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
-                if collision_time(event.ball, w) is not None:
-                    self.events.add(Event(event.ball, w, self.timer))
             self.canvas.after(int(tdelta * 1000), self.update)
