@@ -16,10 +16,11 @@ class VelocityVector:
 
 
 class Ball:
-    def __init__(self, field, pos, radius, density, velocity, color, k):
+    def __init__(self, field, pos, radius, density, velocity, color, k, id):
         # field: Field, pos: Point, radius: int, density: float,
         # velocity: Point, color: Color, mass: float
         # ignore_horizontal: bool, ignore_vertical: bool, oval: int, vector: VelocityVector
+        # id: int
         self.field = field
         self.pos = pos
         self.radius = radius
@@ -29,6 +30,7 @@ class Ball:
         self.mass = density * (radius ** 2)
         self.oval = field.canvas.create_oval((self.pos.x - self.radius, self.pos.y - self.radius), (
             self.pos.x + self.radius, self.pos.y + self.radius), fill=self.color)
+        self.id = id
 
         if self.field.window.app.DEBUG_ARROWS:
             self.vector = VelocityVector(self, k)
@@ -40,7 +42,7 @@ class Ball:
         if self.field.window.app.DEBUG_ARROWS:
             self.vector.update()
 
-    def __hash__(self):
-        return hash((self.pos, self.radius, self.velocity))
+    def __eq__(self, other):
+        return self.pos == other.pos
 
 

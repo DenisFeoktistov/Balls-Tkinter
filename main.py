@@ -5,7 +5,7 @@ from MainWindow.MainWindow import MainWindow
 
 
 class App:
-    FPS = 120
+    FPS = 30
     DEBUG_ARROWS = False
 
     def __init__(self):

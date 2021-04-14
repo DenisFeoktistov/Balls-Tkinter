@@ -4,8 +4,8 @@ from .Point import *
 from enum import Enum
 from itertools import combinations as combs
 
-
 INF = int(1e9)
+
 
 def quadratic_solve(a, b, c):
     if a == 0:
@@ -107,7 +107,7 @@ class Field:
         # relwidth: float, relheight: float,
         # title: tkinter.Label, canvas: tkinter.Canvas,
         # balls: list, active: bool,
-        # events: dict, timer: float
+        # events: list, timer: float
 
         self.window = window
         self.relx = relx
@@ -158,7 +158,7 @@ class Field:
                     state[f'{color} density']['max'] - state[f'{color} density']['min']) * \
                              state[f'{color} density']['value']
         self.balls.clear()
-        for _ in range(count):
+        for ball_id in range(count):
             color = choice(["green", "red", "blue"])
 
             size = randint(state['size']['min'], max_size)
@@ -169,7 +169,7 @@ class Field:
                                             self.canvas.winfo_width() - size - self.BORDER_THICKNESS - 1),
                                     randint(size + self.BORDER_THICKNESS + 1,
                                             self.canvas.winfo_height() - size - self.BORDER_THICKNESS - 1)),
-                        size, density[color], Point(velocity_x, velocity_y), color, k)
+                        size, density[color], Point(velocity_x, velocity_y), color, k, ball_id)
             while not self.check_generate(ball):
                 self.canvas.delete(ball.oval)
                 if self.window.app.DEBUG_ARROWS:
@@ -178,11 +178,11 @@ class Field:
                                                 self.canvas.winfo_width() - size - self.BORDER_THICKNESS - 1),
                                         randint(size + self.BORDER_THICKNESS + 1,
                                                 self.canvas.winfo_height() - size - self.BORDER_THICKNESS - 1)),
-                            size, density[color], Point(velocity_x, velocity_y), color, k)
+                            size, density[color], Point(velocity_x, velocity_y), color, k, ball_id)
 
             self.balls.append(ball)
         for b1 in self.balls:
-            self.events[b1] = self.min_event(b1)
+            self.events[b1.id] = self.min_event(b1)
 
         # for (b1, b2) in combs(self.balls, 2):
         #     if b2 == b1:
@@ -208,11 +208,13 @@ class Field:
                 temp = Event(b1, b2, self.timer)
                 if temp.time < min_time:
                     event = temp
-        for w in [Wall.UP, Wall.RIGHT, Wall.DOWN, Wall.LEFT]:
+                    min_time = temp.time
+        for w in Wall:
             if collision_time(b1, w) is not None:
                 temp = Event(b1, w, self.timer)
                 if temp.time < min_time:
                     event = temp
+                    min_time = temp.time
         return event
 
     def check_generate(self, ball):
@@ -223,7 +225,7 @@ class Field:
 
     def update(self):
         event = min(self.events.values())
-        print(event.time)
+        #print(event.time)
         if event.time - self.timer > 1 / self.window.app.FPS:
             for ball in self.balls:
                 ball.move(1 / self.window.app.FPS)
@@ -234,11 +236,11 @@ class Field:
             for ball in self.balls:
                 ball.move(tdelta)
             self.timer += tdelta
-            self.events[event.ball] = self.min_event(event.ball)
-            
+
             if isinstance(event.obstacle, Ball):
                 collide_balls(event.ball, event.obstacle)
-                self.events[event.obstacle] = self.min_event(event.obstacle)
+                self.events[event.obstacle.id] = self.min_event(event.obstacle)
             elif isinstance(event.obstacle, Wall):
                 collide_with_wall(event.ball, event.obstacle)
+            self.events[event.ball.id] = self.min_event(event.ball)
             self.canvas.after(int(tdelta * 1000), self.update)
